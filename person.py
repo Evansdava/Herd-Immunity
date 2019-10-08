@@ -1,6 +1,5 @@
 import random
 from virus import Virus
-import pytest
 random.seed(42)
 
 

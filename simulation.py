@@ -43,26 +43,24 @@ class Simulation(object):
         # TODO: Create a Logger object and bind it to self.logger.
         # Remember to call the appropriate logger method in the corresponding
         # parts of the simulation.
-        # TODO: Call self._create_population() and pass in the correct
-        # parameters.
-        # Store the array that this method will return in the self.population
-        # attribute.
         # TODO: Store each newly infected person's ID in newly_infected
         # attribute.
         # At the end of each time step, call self._infect_newly_infected()
         # and then reset .newly_infected back to an empty list.
-        self.logger = None
-        self.population = []  # List of Person objects
         self.pop_size = pop_size  # Int
         self.next_person_id = 0  # Int
         self.virus = virus  # Virus object
         self.initial_infected = initial_infected  # Int
+        self.vacc_percentage = vacc_percentage  # float between 0 and 1
         self.total_infected = 0  # Int
         self.current_infected = 0  # Int
-        self.vacc_percentage = vacc_percentage  # float between 0 and 1
         self.total_dead = 0  # Int
+        self.total_vaccinated = 0  # Int
+        self.population = self._create_population(self.initial_infected)
+        # List of people objects
         self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(
-            virus_name, pop_size, vacc_percentage, initial_infected)
+            virus.name, pop_size, vacc_percentage, initial_infected)
+        self.logger = Logger(self.file_name)
         self.newly_infected = []
 
     def _create_population(self, initial_infected):
@@ -77,20 +75,21 @@ class Simulation(object):
                 list: A list of Person objects.
 
         """
-        # TODO: Finish this method!  This method should be called when the
-        # simulation
-        # begins, to create the population that will be used. This method
-        # should return
-        # an array filled with Person objects that matches the specifications
-        # of the
-        # simulation (correct number of people in the population, correct
-        # percentage of
-        # people vaccinated, correct number of initially infected people).
-
         # Use the attributes created in the init method to create a population
-        # that has
-        # the correct intial vaccination percentage and initial infected.
-        pass
+        # that has the correct intial vaccination percentage and initial
+        # infected.
+        pop_list = []
+        vacc_number = int(self.pop_size * self.vacc_percentage)
+        for person_num in range(self.pop_size):
+            if person_num < initial_infected:
+                pop_list.append(Person(person_num, False, self.virus))
+            elif person_num < initial_infected + vacc_number:
+                pop_list.append(Person(person_num, True))
+                self.total_vaccinated += 1
+            else:
+                pop_list.append(Person(person_num, False))
+
+        return pop_list
 
     def _simulation_should_continue(self):
         """
@@ -102,8 +101,11 @@ class Simulation(object):
                 end.
 
         """
-        # TODO: Complete this helper method.  Returns a Boolean.
-        pass
+        # Checks the number of dead and vaccinated people against pop_size
+        if self.total_dead + self.total_vaccinated == self.pop_size:
+            return False
+        else:
+            return True
 
     def run(self):
         """
@@ -196,6 +198,32 @@ class Simulation(object):
         # self.newly_infected, remember
         # to reset self.newly_infected back to an empty list.
         pass
+
+
+def test_create_population():
+    virus = Virus("Test", 0.8, 0.2)
+    # 100 people, 80% vaccination, 10 initial infected
+    sim = Simulation(100, 0.7, virus, 10)
+
+    inf_list = []
+    vacc_list = []
+
+    print("People", len(sim.population))
+    assert len(sim.population) == 100
+
+    for person in sim.population:
+        if person.infection is not None:
+            inf_list.append(person)
+        elif person.is_vaccinated:
+            vacc_list.append(person)
+
+    print("Infected", len(inf_list))
+    assert len(inf_list) == 10
+
+    print("Vaccinated", len(vacc_list))
+    assert len(vacc_list) == 70
+
+    assert sim.total_vaccinated == len(vacc_list)
 
 
 if __name__ == "__main__":
