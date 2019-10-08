@@ -41,6 +41,7 @@ class Person(object):
                 return False
             else:
                 self.is_vaccinated = True
+                self.infection = None
                 return True
         # Return None if there is no virus
         else:
