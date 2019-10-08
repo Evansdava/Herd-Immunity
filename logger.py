@@ -10,8 +10,6 @@ class Logger(object):
 
     def __init__(self, file_name):
         """Initialize starting values"""
-        # TODO:  Finish this initialization method. The file_name passed should
-        # be the full file name of the file that the logs will be written to.
         self.file_name = file_name
 
     def write_metadata(self, pop_size, vacc_percentage,
@@ -21,7 +19,9 @@ class Logger(object):
         specific parameters of the simulation as the first line of the file.
         """
         f = open(self.file_name, "w")
-        f.write(f"Pop_size: {pop_size}\tVacc_percentage: {vacc_percentage}\tVirus_name: {virus_name}\tMortality_rate: {mortality_rate}\tRepro_num: {basic_repro_num}\n")
+        f.write(f"Pop_size: {pop_size}\tVacc_percentage: {vacc_percentage}"
+                "\tVirus_name: {virus_name}\tMortality_rate: {mortality_rate}"
+                "\tRepro_num: {basic_repro_num}\n")
         f.close()
 
     def log_interaction(self, person, random_person, random_person_sick=None,
@@ -39,13 +39,17 @@ class Logger(object):
         """
         f = open(self.file_name, "a")
         if did_infect:
-            f.write(f"Person {person._id} infects person {random_person._id}\n")
+            f.write(f"Person {person._id} infects person {random_person._id}"
+                    "\n")
         elif random_person_vacc:
-            f.write(f"Person {person._id} does not infect person {random_person._id} because vaccinated\n")
+            f.write(f"Person {person._id} does not infect person",
+                    f"{random_person._id} because vaccinated\n")
         elif random_person_sick:
-            f.write(f"Person {person._id} does not infect person {random_person._id} because already infected\n")
+            f.write(f"Person {person._id} does not infect person",
+                    f"{random_person._id} because already infected\n")
         else:
-            (f"Person {person._id} does not infect person {random_person._id}\n")
+            f.write(f"Person {person._id} does not infect person",
+                    f"{random_person._id}\n")
         f.close()
 
     def log_infection_survival(self, person, did_die_from_infection):
@@ -57,10 +61,6 @@ class Logger(object):
             "{person.ID} died from infection\n" or "{person.ID} survived
             infection.\n"
         """
-        # TODO: Finish this method. If the person survives,
-        # did_die_from_infection
-        # should be False.  Otherwise, did_die_from_infection should be True.
-        # Append the results of the infection to the logfile
         f = open(self.file_name, "a")
         if did_die_from_infection:
             f.write(f"Person {person._id} died from infection\n")
@@ -94,5 +94,6 @@ class Logger(object):
         # new one begins.
         # NOTE: Here is an opportunity for a stretch challenge!
         f = open(self.file_name)
-        f.write(f"Time step {time_step_number} ended, beginning {time_step_number + 1}\n")
+        f.write(f"Time step {time_step_number} ended, beginning",
+                f"{time_step_number + 1}\n")
         f.close()
