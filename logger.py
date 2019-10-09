@@ -68,7 +68,9 @@ class Logger(object):
             f.write(f"Person {person._id} survived infection.\n")
         f.close()
 
-    def log_time_step(self, time_step_number):
+    def log_time_step(self, time_step_number, new_infections, new_deaths,
+                      new_vaccinations, total_infections, total_deaths,
+                      total_vaccinations):
         r"""
         STRETCH CHALLENGE DETAILS:
 
@@ -96,4 +98,11 @@ class Logger(object):
         f = open(self.file_name, "a")
         f.write(f"Time step {time_step_number} ended, beginning "
                 f"{time_step_number + 1}\n")
+        f.write(f"""Infections this step: {new_infections}
+                Total infections: {total_infections}
+                Deaths this step: {new_deaths}
+                Total deaths: {total_deaths}
+                Vaccinations this step: {new_vaccinations}
+                Total Vaccinations: {total_vaccinations}
+                """)
         f.close()

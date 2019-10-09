@@ -54,12 +54,14 @@ class Simulation(object):
         self.vacc_percentage = vacc_percentage  # float between 0 and 1
         self.total_infected = 0  # Int
         self.current_infected = 0  # Int
+        self.new_deaths = 0  # Int
         self.total_dead = 0  # Int
+        self.new_vaccinations = 0  # Int
         self.total_vaccinated = 0  # Int
         self.population = self._create_population(self.initial_infected)
         # List of people objects
-        self.file_name = "logs/{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(
-            virus.name, pop_size, vacc_percentage, initial_infected)
+        self.file_name = "logs/{}_simulation_pop_{}_vp_{}_infected_{}\
+.txt".format(virus.name, pop_size, vacc_percentage, initial_infected)
         self.logger = Logger(self.file_name)
         self.newly_infected = []
 
@@ -127,16 +129,6 @@ class Simulation(object):
         This method should run the simulation until all requirements for ending
         the simulation are met.
         """
-        # TODO: Finish this method.  To simplify the logic here, use the helper
-        # method
-        # _simulation_should_continue() to tell us whether or not we should
-        # continue
-        # the simulation and run at least 1 more time_step.
-
-        # TODO: Keep track of the number of time steps that have passed.
-        # HINT: You may want to call the logger's log_time_step() method at the
-        # end of each time step.
-        # TODO: Set this variable using a helper
         time_step_counter = 0
         should_continue = True
 
@@ -145,7 +137,10 @@ class Simulation(object):
             time_step_counter += 1
             self.time_step()
             should_continue = self._simulation_should_continue()
-            self.logger.log_time_step(time_step_counter)
+            self.logger.log_time_step(time_step_counter, self.current_infected,
+                                      self.new_deaths, self.new_vaccinations,
+                                      self.total_infected, self.total_dead,
+                                      self.total_vaccinated)
 
         print('The simulation has ended after',
               f'{time_step_counter} turns.'.format(time_step_counter))
@@ -167,7 +162,8 @@ class Simulation(object):
         """
         # Create list of infected people
         inf_list = self.get_infected()
-
+        self.new_deaths = 0
+        self.new_vaccinations = 0
         # Iterate through infected population and interact with 100 people
         for person in inf_list:
             interaction_count = 0
@@ -183,9 +179,11 @@ class Simulation(object):
             survived = person.did_survive_infection()
             if survived:
                 self.total_vaccinated += 1
+                self.new_vaccinations += 1
                 self.logger.log_infection_survival(person, False)
             else:
                 self.total_dead += 1
+                self.new_deaths += 1
                 self.logger.log_infection_survival(person, True)
 
         # Infect newly infected people
