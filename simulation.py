@@ -40,13 +40,6 @@ class Simulation(object):
         run.
         HINT: Look in the if __name__ == "__main__" function at the bottom.
         """
-        # TODO: Create a Logger object and bind it to self.logger.
-        # Remember to call the appropriate logger method in the corresponding
-        # parts of the simulation.
-        # TODO: Store each newly infected person's ID in newly_infected
-        # attribute.
-        # At the end of each time step, call self._infect_newly_infected()
-        # and then reset .newly_infected back to an empty list.
         self.pop_size = pop_size  # Int
         self.next_person_id = 0  # Int
         self.virus = virus  # Virus object
@@ -136,11 +129,11 @@ class Simulation(object):
             # Complete another step of the simulation
             time_step_counter += 1
             self.time_step()
-            should_continue = self._simulation_should_continue()
             self.logger.log_time_step(time_step_counter, self.current_infected,
                                       self.new_deaths, self.new_vaccinations,
                                       self.total_infected, self.total_dead,
                                       self.total_vaccinated)
+            should_continue = self._simulation_should_continue()
 
         print('The simulation has ended after',
               f'{time_step_counter} turns.'.format(time_step_counter))
@@ -161,9 +154,10 @@ class Simulation(object):
                 increment interaction counter by 1.
         """
         # Create list of infected people
-        inf_list = self.get_infected()
         self.new_deaths = 0
         self.new_vaccinations = 0
+        inf_list = self.get_infected()
+
         # Iterate through infected population and interact with 100 people
         for person in inf_list:
             interaction_count = 0
@@ -188,6 +182,7 @@ class Simulation(object):
 
         # Infect newly infected people
         self._infect_newly_infected()
+        self.get_infected()
 
     def interaction(self, person, random_person):
         """
@@ -222,7 +217,8 @@ class Simulation(object):
                                         True, False, False)
         else:
             inf_chance = random.random()
-            if inf_chance < person.infection.repro_rate:
+            if (inf_chance < person.infection.repro_rate
+               and self.newly_infected.count(random_person._id) == 0):
                 self.newly_infected.append(random_person._id)
                 self.logger.log_interaction(person, random_person,
                                             False, False, True)

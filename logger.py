@@ -19,9 +19,9 @@ class Logger(object):
         specific parameters of the simulation as the first line of the file.
         """
         f = open(self.file_name, "w")
-        f.write(f"Pop_size: {pop_size}\tVacc_percentage: {vacc_percentage}"
-                f"\tVirus_name: {virus_name}\tMortality_rate: {mortality_rate}"
-                f"\tRepro_num: {basic_repro_num}\n")
+        f.write(f"Pop_size: {pop_size}\tVacc_percentage: {vacc_percentage}\t"
+                f"Virus_name: {virus_name}\tMortality_rate: {mortality_rate}\t"
+                f"Repro_num: {basic_repro_num}\n")
         f.close()
 
     def log_interaction(self, person, random_person, random_person_sick=None,
@@ -96,13 +96,13 @@ class Logger(object):
         # new one begins.
         # NOTE: Here is an opportunity for a stretch challenge!
         f = open(self.file_name, "a")
+        f.write(f"""Infections this step: {new_infections}
+Total infections: {total_infections}
+Deaths this step: {new_deaths}
+Total deaths: {total_deaths}
+Vaccinations this step: {new_vaccinations}
+Total Vaccinations: {total_vaccinations}
+""")
         f.write(f"Time step {time_step_number} ended, beginning "
                 f"{time_step_number + 1}\n")
-        f.write(f"""Infections this step: {new_infections}
-                Total infections: {total_infections}
-                Deaths this step: {new_deaths}
-                Total deaths: {total_deaths}
-                Vaccinations this step: {new_vaccinations}
-                Total Vaccinations: {total_vaccinations}
-                """)
         f.close()
