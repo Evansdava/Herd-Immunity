@@ -4,8 +4,6 @@ import os
 from virus import Virus
 from person import Person
 from logger import Logger
-import pytest
-pytest
 
 
 def test_logger_metadata():

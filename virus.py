@@ -22,7 +22,7 @@ def test_ebola_inst():
     virus = Virus("Ebola", 0.25, 0.5)
     assert virus.name == "Ebola"
     assert virus.repro_rate == 0.25
-    assert virus.mortality_rate == 0.3
+    assert virus.mortality_rate == 0.5
 
 
 def test_measles_inst():

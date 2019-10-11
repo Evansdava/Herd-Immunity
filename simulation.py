@@ -85,6 +85,7 @@ class Simulation(object):
             if person_num < initial_infected:
                 pop_list.append(Person(person_num, False, self.virus))
                 self.total_infected += 1
+                self.current_infected += 1
             # Create vaccinated people
             elif person_num < initial_infected + vacc_number:
                 pop_list.append(Person(person_num, True))
@@ -140,8 +141,9 @@ class Simulation(object):
                                       self.total_vaccinated, self.vacc_saves)
             should_continue = self._simulation_should_continue()
 
-        print('The simulation has ended after',
-              f'{time_step_counter} turns.'.format(time_step_counter))
+        print(f'The simulation has ended after {time_step_counter} turns.')
+
+        return f'The simulation has ended after {time_step_counter} turns.'
 
     def time_step(self):
         """
@@ -231,6 +233,8 @@ class Simulation(object):
             else:
                 self.logger.log_interaction(person, random_person,
                                             False, False, False)
+
+            return inf_chance
 
     def _infect_newly_infected(self):
         """
