@@ -1,3 +1,5 @@
+# Tests written by Ben Lafferty, modified by me with his permission
+
 # This code tests the actual simulation
 from virus import Virus
 from person import Person
