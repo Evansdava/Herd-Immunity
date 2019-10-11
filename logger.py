@@ -19,9 +19,9 @@ class Logger(object):
         specific parameters of the simulation as the first line of the file.
         """
         f = open(self.file_name, "w")
-        f.write(f"Pop_size: {pop_size}\tVacc_percentage: {vacc_percentage}\t"
-                f"Virus_name: {virus_name}\tMortality_rate: {mortality_rate}\t"
-                f"Repro_num: {basic_repro_num}\n")
+        f.write(f"Pop_size: {pop_size}    Vacc_percentage: {vacc_percentage}"
+                f"    Virus_name: {virus_name}    Mortality_rate: "
+                f"{mortality_rate}    Repro_num: {basic_repro_num}\n")
         f.close()
 
     def log_interaction(self, person, random_person, random_person_sick=None,
@@ -65,12 +65,12 @@ class Logger(object):
         if did_die_from_infection:
             f.write(f"Person {person._id} died from infection\n")
         else:
-            f.write(f"Person {person._id} survived infection.\n")
+            f.write(f"Person {person._id} survived infection\n")
         f.close()
 
-    def log_time_step(self, time_step_number, new_infections, new_deaths,
-                      new_vaccinations, total_infections, total_deaths,
-                      total_vaccinations):
+    def log_time_step(self, time_step_number, new_infections=0, new_deaths=0,
+                      new_vaccinations=0, total_infections=0, total_deaths=0,
+                      total_vaccinations=0, vacc_saves=0):
         r"""
         STRETCH CHALLENGE DETAILS:
 
@@ -102,6 +102,7 @@ Deaths this step: {new_deaths}
 Total deaths: {total_deaths}
 Vaccinations this step: {new_vaccinations}
 Total Vaccinations: {total_vaccinations}
+Possible infections stopped by Vaccination: {vacc_saves}
 """)
         f.write(f"Time step {time_step_number} ended, beginning "
                 f"{time_step_number + 1}\n")

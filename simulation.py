@@ -41,7 +41,6 @@ class Simulation(object):
         HINT: Look in the if __name__ == "__main__" function at the bottom.
         """
         self.pop_size = pop_size  # Int
-        self.next_person_id = 0  # Int
         self.virus = virus  # Virus object
         self.initial_infected = initial_infected  # Int
         self.vacc_percentage = vacc_percentage  # float between 0 and 1
@@ -51,6 +50,7 @@ class Simulation(object):
         self.total_dead = 0  # Int
         self.new_vaccinations = 0  # Int
         self.total_vaccinated = 0  # Int
+        self.vacc_saves = 0  # Int
         self.population = self._create_population(self.initial_infected)
         # List of people objects
         self.file_name = "logs/{}_simulation_pop_{}_vp_{}_infected_{}\
@@ -79,13 +79,17 @@ class Simulation(object):
         # infected.
         pop_list = []
         vacc_number = int(self.pop_size * self.vacc_percentage)
+
         for person_num in range(self.pop_size):
+            # Create initially infected people
             if person_num < initial_infected:
                 pop_list.append(Person(person_num, False, self.virus))
                 self.total_infected += 1
+            # Create vaccinated people
             elif person_num < initial_infected + vacc_number:
                 pop_list.append(Person(person_num, True))
                 self.total_vaccinated += 1
+            # Create everyone else
             else:
                 pop_list.append(Person(person_num, False))
 
@@ -101,7 +105,8 @@ class Simulation(object):
                 end.
 
         """
-        if len(self.get_infected()) == 0:
+        # If there are no infected people left
+        if self.current_infected == 0:
             return False
         else:
             return True
@@ -132,7 +137,7 @@ class Simulation(object):
             self.logger.log_time_step(time_step_counter, self.current_infected,
                                       self.new_deaths, self.new_vaccinations,
                                       self.total_infected, self.total_dead,
-                                      self.total_vaccinated)
+                                      self.total_vaccinated, self.vacc_saves)
             should_continue = self._simulation_should_continue()
 
         print('The simulation has ended after',
@@ -163,7 +168,8 @@ class Simulation(object):
             interaction_count = 0
             while interaction_count < 100:
                 random_person = random.choice(self.population)
-                while not random_person.is_alive:
+                while (not random_person.is_alive
+                       and random_person._id != person._id):
                     random_person = random.choice(self.population)
                 self.interaction(person, random_person)
                 interaction_count += 1
@@ -202,16 +208,16 @@ class Simulation(object):
         assert person.is_alive is True
         assert random_person.is_alive is True
 
-        """
-        Check Cases:
-        If vaccinated or sick, do nothing
-        Otherwise find random percentage and check against repro_rate
-            If it's lower, add random_person to newly_infected list
-            Otherwise, nothing happens
-        """
+        # Check Cases:
+        # If vaccinated or sick, do nothing
+        # Otherwise find random percentage and check against repro_rate
+        #     If it's lower, add random_person to newly_infected list
+        #     Otherwise, nothing happens
+
         if random_person.is_vaccinated:
             self.logger.log_interaction(person, random_person,
                                         False, True, False)
+            self.vacc_saves += 1
         elif random_person.infection is not None:
             self.logger.log_interaction(person, random_person,
                                         True, False, False)
@@ -266,6 +272,7 @@ def test_create_population():
 
 
 if __name__ == "__main__":
+    # Smallpox 0.6 0.15 100000 0.95
     params = sys.argv[1:]
     virus_name = str(params[0])
     repro_rate = float(params[1])

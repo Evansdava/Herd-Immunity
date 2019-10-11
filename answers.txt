@@ -1,0 +1,23 @@
+1. What were the inputs you gave the simulation? (Population size, percent vaccinated, virus name, mortality rate,  reproductive rate)
+
+Population size: 100000
+Percent Vaccinated: 95%
+Virus name: Smallpox
+Mortality rate: 0.15
+Repro rate: 0.6
+
+> Smallpox 0.6 0.15 100000 0.95
+
+
+2. What percentage of the population became infected at some point before the virus burned out?
+
+The largest concurrent percentage of infected people was 1.321% (1,321/100,000)
+The total number of infected people was 4.685% (4,685/100,000)
+
+3.  What percentage of the population died from the virus?
+
+0.664% (664/100,000) died from the virus
+
+4.  Out of all interactions sick individuals had during the entire simulation, how many total interactions did we see where a vaccination saved a person from potentially becoming infected?
+
+There were 453,830 interactions between an infected individual and a vaccinated one

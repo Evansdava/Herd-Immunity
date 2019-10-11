@@ -97,6 +97,7 @@ def test_did_survive_infection():
     if survived:
         assert person.is_alive is True
         assert person.is_vaccinated is True
+        assert person.infection is None
     else:
         assert person.is_alive is False
         assert person.is_vaccinated is False
